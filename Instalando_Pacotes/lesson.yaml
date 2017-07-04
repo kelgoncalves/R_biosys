@@ -1,0 +1,53 @@
+- Class: meta
+  Course: RTNRedeR Starter
+  Lesson: Instalando pacotes
+  Author: GONÇALVES, K.O., CASTRO, M.A.A., CHAGAS, V.S., GROENEVELD, C.S., TREFFLICH, S.
+  Type: Standard
+  Organization: PRPPG-BIOINFO UFPR
+  Version: 2.4.3
+
+- Class: text
+  Output: Bem vindo(a) ao curso de iniciação aos pacotes RTN e RedeR. Pressione ENTER para continuar.
+
+- Class: text
+  Output: Antes de iniciar, vamos passar por alguns comandos básicos para navegar no curso.
+
+- Class: text
+  Output: Para dar uma breve pausa do curso e experimentar comandos, digite play() quando o console mostrar o sinal >. Para voltar ao curso, digite nxt().
+
+- Class: text
+  Output: Para retornar ao menu, use main() também quando > aparecer.
+  
+- Class: text
+  Output: Para sair do curso em qualquer momento, digite bye() no console.
+  
+- Class: text
+  Output: A instalação dos pacotes utilizados  provenientes do repositório Bioconductor é feito por meio de dois comandos principais no RStudio.
+
+- Class: text
+  Output: Primeiro indicamos o local onde o pacote está depositado através do comando":" source("https://bioconductor.org/biocLite.R") 
+
+- Class: text
+  Output: seguido pelo comando que especifica qual pacote deve ser baixado, por exemplo, biocLite("RTN")
+
+- Class: cmd_question
+  Output: Copie o comando source e cole abaixo para abrir a conexão entre o R e o repositório.
+  CorrectAnswer: source("https://bioconductor.org/biocLite.R")
+  AnswerTests: omnitest(correctExpr= 'source("https://bioconductor.org/biocLite.R")')
+  Hint: copie e cole source("https://bioconductor.org/biocLite.R") no console
+ 
+- Class: cmd_question
+  Output: Agora utilize o comando biocLite para instalar o pacote RTN
+  CorrectAnswer: biocLite("RTN")
+  AnswerTests: omnitest(correctExpr= 'biocLite("RTN")')
+  Hint: copie e cole biocLite("RTN") no console
+ 
+- Class: cmd_question
+  Output: Faça o biocLite para instalar o pacote RedeR também.
+  CorrectAnswer: biocLite("RedeR")
+  AnswerTests: omnitest(correctExpr= 'biocLite("RedeR")')
+  Hint: coloque o comando biocLite("RedeR") no console
+  
+
+- Class: text
+  Output: Após a instalação, os pacotes que serão utilizados ainda necessitarão ser carregados. Para fazer isso, é utilizado o comando library(RTN), que será utilizado no início da próxima lição.
