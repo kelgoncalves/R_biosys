@@ -1,0 +1,310 @@
+- Class: meta
+  Course: RTNRedeR Starter
+  Lesson: RTN
+  Author: Bioinformatics and Systems Biology Lab
+  Type: Standard
+  Organization: PRPPG-BIOINFO UFPR
+  Version: 2.4.3
+
+- Class: text
+  Output: Neste módulo, você irá aprender como utilizar o pacote RTN. Um pacote que permite a criação de redes transcricionais e análises destas.
+
+- Class: text
+  Output: Para mais informações, acesse o manual do pacote disponível no Bioconductor, no tópico Documentation.
+  
+- Class: text
+  Output: 'IMPORTANTE: é necessário que todos os comando sejam feitos sem inserção de espaços para que a resposta correta seja reconhecida. Isso ocorre, pois o algoritmo do curso reconhece "x <- a + b" como uma resposta diferente de "x<-a+b".'
+  
+- Class: cmd_question
+  Output: Carregue o pacote.
+  CorrectAnswer: library(RTN)
+  AnswerTests: omnitest(correctExpr= 'library(RTN)')
+  Hint: Utilize o comando library no console
+  
+- Class: text
+  Output: 'O pacote RTN possui um conjunto de dados de exemplo chamado dt4rtn. Os dados contidos em um pacote podem ser carregados para dentro do ambiente com o comando data(). Ex: data("dt4rtn")'
+  
+- Class: cmd_question
+  Output: Carregue o conjunto de dados para dentro do ambiente R.
+  CorrectAnswer: data("dt4rtn")
+  AnswerTests: omnitest(correctExpr= 'data("dt4rtn")')
+  Hint: Coloque o comando data("dt4rtn") no console
+  
+- Class: text
+  Output: 'Os dados obrigatoriamente necessários para rodar a primeira análise do RTN são: Uma matriz de expressão gênica nomeada com as amostras dispostas nas colunas, junto de um vetor contendo symbols de fatores de transcrição (TFs).'
+  
+- Class: text
+  Output: Opcionalmente, é possível fornecer um dataframe contendo anotação de genes (gexpIDs), que pode ser utilizado para remover genes duplicados posteriormente na análise.
+  
+- Class: cmd_question
+  Output: Observe como é a estrutura da matriz de expressão contida em dt4rtn, utilizando a função View.
+  CorrectAnswer: View(dt4rtn$gexp)
+  AnswerTests: omnitest(correctExpr= 'View(dt4rtn$gexp)')
+  Hint: Coloque View(dt4rtn$gexp) no console
+
+- Class: cmd_question
+  Output: Observe como é a estrutura dos fatores de transcrição contidos em dt4rtn.
+  CorrectAnswer: dt4rtn$tfs
+  AnswerTests: omnitest(correctExpr= 'dt4rtn$tfs')
+  Hint: Coloque dt4rtn$tfs no console
+
+- Class: text
+  Output: Inicialmente, iremos criar um objeto da classe TNI (Transcriptional Network Inference). Este objeto irá conter os regulons construídos a partir da informação mútua (MI) entre os genes contidos na matriz de expressão e os TFs.
+  
+- Class: text
+  Output: 'Para criar o TNI, utilizaremos o comando new. Ex: new("TNI",gexp=matrix_de_expressão,transcriptionFactors=fatores_de_transcrição)'
+
+- Class: text
+  Output: Para criar uma TNI com todos os TFs, é preciso esperar um tempo considerável. Portanto, iremos extrair 5 fatores de transcrição e montar a tni com estes, a fim de tornar o exemplo de uso mais dinâmico.
+  
+- Class: cmd_question
+  Output: Atribua 5 fatores de transcrição contidos em dt4rtn$tfs (sendo eles PTTG1, E2F2, FOXM1, E2F3 E RUNX2) a variável my_tfs. 
+  CorrectAnswer: my_tfs<-dt4rtn$tfs[c("PTTG1","E2F2","FOXM1","E2F3","RUNX2")]
+  AnswerTests: omnitest(correctExpr= 'my_tfs<-dt4rtn$tfs[c("PTTG1","E2F2","FOXM1","E2F3","RUNX2")]')
+  Hint: Coloque my_tfs<-dt4rtn$tfs[c("PTTG1","E2F2","FOXM1","E2F3","RUNX2")] no console.
+  
+- Class: cmd_question
+  Output: Crie um objeto TNI com a matriz de dt4rtn e teus 5 TFs, atribuindo este à variável my_tni. 
+  CorrectAnswer: my_tni<-new("TNI",gexp=dt4rtn$gexp,transcriptionFactors=my_tfs)
+  AnswerTests: omnitest(correctExpr= 'my_tni<-new("TNI",gexp=dt4rtn$gexp,transcriptionFactors=my_tfs)')
+  Hint: Coloque my_tni<-new("TNI",gexp=dt4rtn$gexp,transcriptionFactors=my_tfs) no console.
+  
+- Class: text
+  Output: Uma vez criada, a TNI está pronta para ser processada, a fim de se tornar mais consistente.
+
+- Class: cmd_question
+  Output: Coloque my_tni no console e veja os passos pelo qual o TNI irá passar.
+  CorrectAnswer: my_tni
+  AnswerTests: omnitest(correctExpr= 'my_tni')
+  Hint: Coloque my_tni no console
+  
+- Class: text
+  Output: 'O primeiro passo - pré processamento - irá remover todos os genes que estejam duplicados, por meio daqueles que possuem maior variação na expressão para poder calcular a informação mútua. A função para pré processamento pode ser chamado pelo comando tni.preprocess(). Ex: my_tni<-tni.preprocess(my_tni,gexpIDs=anotação_dos_genes)'
+  
+- Class: cmd_question
+  Output: Observe como é a estrutura das anotações do genes, que está em dt4rtn$gexpIDs. Utilize a função head.
+  CorrectAnswer: head(dt4rtn$gexpIDs)
+  AnswerTests: omnitest(correctExpr= 'head(dt4rtn$gexpIDs)')
+  Hint: Coloque head(dt4rtn$gexpIDs) no console.
+  
+- Class: cmd_question
+  Output: Rode o tni.preprocess com seus dados.
+  CorrectAnswer: my_tni<-tni.preprocess(my_tni,gexpIDs=dt4rtn$gexpIDs)
+  AnswerTests: omnitest(correctExpr= 'my_tni<-tni.preprocess(my_tni,gexpIDs=dt4rtn$gexpIDs)')
+  Hint: Coloque my_tni<-tni.preprocess(my_tni,gexpIDs=dt4rtn$gexpIDs) no console.
+  
+- Class: cmd_question
+  Output: Veja o que aconteceu no status da tni quando você digita my_tni
+  CorrectAnswer: my_tni
+  AnswerTests: omnitest(correctExpr= 'my_tni')
+  Hint: Coloque my_tni no console.
+  
+- Class: text
+  Output: Os dois próximos passos (tni.permutation e tni.bootstrap) vão submeter a rede à mais testes de consistência. A permutação fará diversos rearranjos na matriz de expressão, seguido de novos cálculos da informação mútua. Os valores mais raros desta MI são mantidos, enquanto que os valores médios (de maior ocorrência) são descartados por indicarem o acaso.
+  
+- Class: text
+  Output: 'O teste de permutação pode ser feito pelo comando tni.permutation() e não necessita de nenhum outro parâmetro senão a própria tni. Ex: my_tni<-tni.permutation(my_tni)'
+
+- Class: cmd_question
+  Output: Faça o tni.permutation
+  CorrectAnswer: my_tni<-tni.permutation(my_tni)
+  AnswerTests: omnitest(correctExpr= 'my_tni<-tni.permutation(my_tni)')
+  Hint: Coloque my_tni<-tni.permutation(my_tni) no console.
+  
+- Class: text
+  Output: O bootstrap validará a força da significância. A análise fará um rearranjo, duplicação e exclusão de algumas colunas, a fim de aumentar o peso da MI para a coluna duplicada, avaliando a coerência dos valores estimados anteriormente.
+
+- Class: cmd_question
+  Output: Rode agora tni.bootstrap(). Esta função segue a mesma sintaxe da função tni.permutation(). 
+  CorrectAnswer: my_tni<-tni.bootstrap(my_tni)
+  AnswerTests: omnitest(correctExpr= 'my_tni<-tni.bootstrap(my_tni)')
+  Hint: Coloque my_tni<-tni.bootstrap(my_tni) no console.
+
+- Class: cmd_question
+  Output: Veja o que aconteceu no status da tni quando você digita my_tni
+  CorrectAnswer: my_tni
+  AnswerTests: omnitest(correctExpr= 'my_tni')
+  Hint: Coloque my_tni no console.
+  
+- Class: text
+  Output: Após estes passos, a rede transcricional já está pronta para ser utilizada, no entanto passos opcionais de processamento podem ser adicionados.
+  
+- Class: text
+  Output: 'O filtro DPI (opcional) considera que, se dois TFs que atuam sobre o mesmo gene têm alta informação mútua entre si, sendo que o primeiro TF tem um valor de MI sobre o gene alvo maior que o segundo TF, este segundo pode ser retirado, abrindo a tríade de interação para uma forma mais simplificada. O filtro dpi pode ser chamado pelo comando: my_tni<-tni.dpi.filter(my_tni).'
+  
+- Class: cmd_question
+  Output: Aplique o filtro DPI à sua TNI
+  CorrectAnswer: my_tni<-tni.dpi.filter(my_tni)
+  AnswerTests: omnitest(correctExpr= 'my_tni<-tni.dpi.filter(my_tni)')
+  Hint: Coloque my_tni<-tni.dpi.filter(my_tni) no console.
+  
+- Class: text
+  Output: É muito provável que, quando você fizer a análise com um novo conjunto de dados, você deseje saber mais sobre os parâmetros que a tua TNI segue (dados estatísticos e valores de informação mútua, por exemplo). Para isso, basta utilizar o comando tni.get(), alterando o que o parâmetro "what" recebe. A função tni.get(my_tni,what="summary") fornecerá parâmetros diversos sobre a rede. Já tni.get(my_tni,what="refnet") e tni.get(my_tni,what="tnet") informarão os valores de informação mútua entre os genes alvos e os TFs dos regulons não filtrados com DPI (refnet) ou para aqueles que passaram pelo filtro DPI (tnet)
+
+- Class: cmd_question
+  Output: Olhe os parâmetros gerais da rede.
+  CorrectAnswer: tni.get(my_tni,what="summary")
+  AnswerTests: omnitest(correctExpr= 'tni.get(my_tni,what="summary")')
+  Hint: Utilize a função tni.get com o parâmetro summary.
+  
+- Class: cmd_question
+  Output: Colete informação sobre os regulons com refnet.
+  CorrectAnswer: tni.get(my_tni,what="refnet")
+  AnswerTests: omnitest(correctExpr= 'tni.get(my_tni,what="refnet")')
+  Hint: Utilize a função tni.get com o parâmetro refnet.
+  
+- Class: text
+  Output: Com os regulons prontos, vamos plotar a rede.
+  
+- Class: cmd_question
+  Output: 'O primeiro passo para gerar as redes, é criar um objeto da classe igraph. Faça isso com a função tni.graph(). Ex: g<-tni.graph(my_tni)'
+  CorrectAnswer: g<-tni.graph(my_tni)
+  AnswerTests: omnitest(correctExpr= 'g<-tni.graph(my_tni)')
+  Hint: Coloque g<-tni.graph(my_tni) no console
+  
+- Class: cmd_question
+  Output: Agora carregue o pacote RedeR.
+  CorrectAnswer: library(RedeR)
+  AnswerTests: omnitest(correctExpr= 'library(RedeR)')
+  Hint: Coloque library(RedeR) no console
+  
+- Class: cmd_question
+  Output: 'Chame o construtor da interface gráfica: rdp<-RedPort()'
+  CorrectAnswer: rdp<-RedPort()
+  AnswerTests: omnitest(correctExpr= 'rdp<-RedPort()')
+  Hint: Coloque rdp<-RedPort() no console
+  
+- Class: cmd_question
+  Output: 'Chame a interface gráfica: calld(rdp)'
+  CorrectAnswer: calld(rdp)
+  AnswerTests: omnitest(correctExpr= 'calld(rdp)')
+  Hint: Coloque calld(rdp) no console
+  
+- Class: cmd_question
+  Output: 'Adicione a rede à interface: addGraph(rdp,g)'
+  CorrectAnswer: addGraph(rdp,g)
+  AnswerTests: omnitest(correctExpr= 'addGraph(rdp,g)')
+  Hint: Coloque addGraph(rdp,g) no console
+  
+- Class: text
+  Output: Veja como está o plot na janela do RedeR.
+  
+- Class: text
+  Output: Meio bagunçado, não? Então vamos arrumar.
+
+- Class: cmd_question
+  Output: 'Reorganize a rede: relax(rdp)'
+  CorrectAnswer: relax(rdp)
+  AnswerTests: omnitest(correctExpr= 'relax(rdp)')
+  Hint: Coloque relax(rdp) no console
+  
+- Class: text
+  Output: Olhe a janela novamente. Para ver a rede por inteira na janela do RedeR, vá em Frame > Fit to window.
+  
+- Class: text
+  Output: Parabéns, você construiu sua rede regulatória com sucesso!
+
+- Class: text
+  Output: 'Vamos supor agora que você precisa fazer análises de enriquecimento, sinergia e sobreposição na rede transcricional que você acabou de montar. Para isso irá precisar transformar a TNI em um objeto passível de sofrer tais análises: o TNA (Transcriptional Network Analysis). Objetos da classe TNA são criados pela função de conversão: tni2tna.preprocess()'
+  
+- Class: text
+  Output: 'O tni2tna recebe 3 parâmetros obrigatórios e um opcional: O object (obrigatório - um TNI pré-processado), phenotype (obrigatório - um vetor numérico, geralmente com os valores de expressão diferencial em log-base2), hits (obrigatório - um vetor de caracteres contendo IDs dos genes considerados hits) e phenoIDs (opcional - um data frame contendo a anotação utilizada para agregar genes de acordo com o fenótipo). Sendo assim, a função completa fica: my_tna<-tni2tna.preprocess(object=my_tni,phenotype=dt4rtn$pheno,hits=dt4rtn$hits,phenoIDs=dt4rtn$phenoIDs).'
+  
+- Class: text
+  Output: Antes de fazer a conversão de TNI para TNA, vamos dar uma olhada no formato dos dados de input que ainda não conhecemos.
+  
+- Class: cmd_question
+  Output: Faça um head() nos dados de phenotype.
+  CorrectAnswer: head(dt4rtn$pheno)
+  AnswerTests: omnitest(correctExpr= 'head(dt4rtn$pheno)')
+  Hint: Coloque head(dt4rtn$pheno) no console
+  
+- Class: cmd_question
+  Output: Faça um head() nos dados de hits.
+  CorrectAnswer: head(dt4rtn$hits)
+  AnswerTests: omnitest(correctExpr= 'head(dt4rtn$hits)')
+  Hint: Coloque head(dt4rtn$hits) no console
+  
+- Class: cmd_question
+  Output: Veja a estrutura dos PhenoIDs com a função View()
+  CorrectAnswer: View(dt4rtn$phenoIDs)
+  AnswerTests: omnitest(correctExpr= 'View(dt4rtn$phenoIDs)')
+  Hint: Coloque View(dt4rtn$phenoIDs) no console
+  
+- Class: cmd_question
+  Output: Agora que os dados já são velhos conhecidos teus, faça a conversão de TNI para TNA. Lembre-se de não deixar espaços na função.
+  CorrectAnswer: my_tna<-tni2tna.preprocess(object=my_tni,phenotype=dt4rtn$pheno,hits=dt4rtn$hits,phenoIDs=dt4rtn$phenoIDs)
+  AnswerTests: omnitest(correctExpr= 'my_tna<-tni2tna.preprocess(object=my_tni,phenotype=dt4rtn$pheno,hits=dt4rtn$hits,phenoIDs=dt4rtn$phenoIDs)')
+  Hint: Digite my_tna<-tni2tna.preprocess(object=my_tni,phenotype=dt4rtn$pheno,hits=dt4rtn$hits,phenoIDs=dt4rtn$phenoIDs)
+  
+- Class: text
+  Output: Agora que temos o objeto certo, podemos perguntar à rede transcricional qual dos fatores de transcrição tem maior influência sobre esta rede, ou seja, quais TFs são os Reguladores Principais. A resposta pode ser obtida pela função tna.mra(), que irá receber o TNA como input único. (MRA=Master Regulators Analysis)
+  
+- Class: cmd_question
+  Output: Faça a análise de Master Regulators para teu TNA.
+  CorrectAnswer: my_tna<-tna.mra(my_tna)
+  AnswerTests: omnitest(correctExpr= 'my_tna<-tna.mra(my_tna)')
+  Hint: Coloque my_tna<-tna.mra(my_tna) no console.
+  
+- Class: cmd_question
+  Output: Obtenha os resultados do MRA com tna.get(), utilizando "mra" como parâmetro do what.
+  CorrectAnswer: tna.get(my_tna,what="mra")
+  AnswerTests: omnitest(correctExpr= 'tna.get(my_tna,what="mra")')
+  Hint: Coloque tna.get(my_tna,what="mra") no console.
+  
+- Class: text
+  Output: Para saber quais genes são alvos da regulação de mais de um TF, utilize a função tna.overlap(). Esta segue a mesma sintaxe da função anterior.
+  
+- Class: cmd_question
+  Output: Rode a função de overlap.
+  CorrectAnswer: my_tna<-tna.overlap(my_tna)
+  AnswerTests: omnitest(correctExpr= 'my_tna<-tna.overlap(my_tna)')
+  Hint: Coloque my_tna<-tna.overlap(my_tna) no console.
+  
+- Class: cmd_question
+  Output: Obtenha os resultados do overlap tmabém com tna.get(), mas utilizando "overlap" como parâmetro de what.
+  CorrectAnswer: tna.get(my_tna,what="overlap")
+  AnswerTests: omnitest(correctExpr= 'tna.get(my_tna,what="overlap")')
+  Hint: Coloque tna.get(my_tna,what="overlap") no console.
+  
+- Class: text
+  Output: Até agora, você montou uma rede transcricional, avaliou quais são os reguladores principais e verificou sobreposição da regulaçãoentre TFs, mas como é possível saber se o perfil de expressão está de acordo com o fenótipo?
+  
+- Class: text
+  Output: A análise de GSEA (Gene Set Enrichment Analysis) pode te fornecer esta informação. Este método é capaz de identificar classes de genes que estão altamente representados no conjunto de dados e verificar se estes tem diferenças estatisticamente significantes de acordo com o fenótipo, pela comparação entre dois grupos (os valores expressão de input e os gerados aleatoriamente pela permutação). Nesta abordagem, as funções tna.gsea1() e tna.gsea2() farão o trabalho por você.
+  
+- Class: text
+  Output: 'A tna.gsea1() faz análise de GSEA de uma cauda, enquanto que a função tna.gsea2() fará a análise bicaudal. Apesar das funções receberem diversos parâmetros adicionas, apenas um deve ser obrigatoriamente citado, o objeto de classe TNA. Se os outros parâmetros não forem citados, a definição padrão destes será a escolhida (DEFAULT). Na verdade, isto ocorre com a maioria das funções. A função pode ser chamada assim: my_tna<-tna.gsea1(my_tna).'
+  
+- Class: cmd_question
+  Output: 'Faça a análise GSEA1 para my_tna, mas adicione os parâmetros: stepFilter=FALSE e nPermutations=100. Lembre de não deixar espaços.'
+  CorrectAnswer: my_tna<-tna.gsea1(my_tna,stepFilter=FALSE,nPermutations=100)
+  AnswerTests: omnitest(correctExpr= 'my_tna<-tna.gsea1(my_tna,stepFilter=FALSE,nPermutations=100)')
+  Hint: Coloque my_tna<-tna.gsea1(my_tna,stepFilter=FALSE,nPermutations=100) no console.
+  
+- Class: text
+  Output: stepFilter=False indica que a análise vai incluir os regulons que não são master regulators. Já nPermutations=100 indica o número de valores aleatórios de expressão que a análise vai gerar para comparar com os dados reais. Mil permutações é o mínimo ideal, mas consideramos 100 aqui devido à redução no tempo de processamento.
+  
+- Class: cmd_question
+  Output: Vamos plotar o resultado. Digite tna.plot.gsea1(my_tna,file="tna_gsea1",labPheno="abs(log2) diff. expression") 
+  CorrectAnswer: tna.plot.gsea1(my_tna,file="tna_gsea1",labPheno="abs(log2) diff. expression")
+  AnswerTests: omnitest(correctExpr= 'tna.plot.gsea1(my_tna,file="tna_gsea1",labPheno="abs(log2) diff. expression")')
+  Hint: Coloque tna.plot.gsea1(my_tna,file="tna_gsea1",labPheno="abs(log2) diff. expression") no console.
+  
+- Class: text
+  Output: Um arquivo chamado tna_gsea1.pdf foi criado no teu diretório de trabalho.
+  
+- Class: cmd_question
+  Output: 'Faça a análise GSEA2 para my_tna e adicione os parâmetros: tfs="PTTG1" e nPermutations=100. Lembre de não deixar espaços.'
+  CorrectAnswer: my_tna<-tna.gsea2(my_tna,tfs="PTTG1",nPermutations=100)
+  AnswerTests: omnitest(correctExpr= 'my_tna<-tna.gsea2(my_tna,tfs="PTTG1",nPermutations=100)')
+  Hint: Coloque my_tna<-tna.gsea2(my_tna,tfs="PTTG1",nPermutations=100) no console.
+  
+- Class: cmd_question
+  Output: Plote este também. Digite tna.plot.gsea2(my_tna,file="tna_gsea2",labPheno="log2 diff. expression")  
+  CorrectAnswer: tna.plot.gsea2(my_tna,file="tna_gsea2",labPheno="log2 diff. expression")
+  AnswerTests: omnitest(correctExpr= 'tna.plot.gsea2(my_tna,file="tna_gsea2",labPheno="log2 diff. expression")')
+  Hint: Digite tna.plot.gsea2(my_tna,file="tna_gsea2",labPheno="log2 diff. expression")
+  
+- Class: text
+  Output: Um arquivo chamado tna_gsea2_PTTG1.pdf foi criado no teu diretório de trabalho.
